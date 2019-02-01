@@ -43,9 +43,6 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
       .attr("cy", (d, i) => yScale(Seconds[i]))
       .attr("r", 5)
 
-    console.log(data[0].Name)
-
-    var index = 0
     circle
       .append("title")
       .text((d, i) => Name[i] + ": " + Nation[i] + "\nYear: " + Year[i] + ", Time: " + Time[i] + "\n\n" + Doping[i])
@@ -68,6 +65,40 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
       .attr("id", "y-axis")
       .attr("transform", "translate(" + padding.bottom +", 0)")
       .call(yAxis)
+
+   // add legend   
+
+   svgContainer.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(400, 0)");
+
+    var legend = svgContainer.selectAll('.legend')                     // NEW
+      .data(data)                                   // NEW
+      .enter()                                                // NEW
+      .append('g')                                            // NEW
+      .attr("transform", "translate(200, 300)");
+
+      /*// NEW
+      .attr('transform', function (d, i) {                     // NEW
+        var height = legendRectSize + legendSpacing;          // NEW
+        var offset = height * color.domain().length / 2;     // NEW
+        var horz = -2 * legendRectSize;                       // NEW
+        var vert = i * height - offset;                       // NEW
+        return 'translate(' + horz + ',' + vert + ')';        // NEW
+      });
+      */
+    // NEW
+    legend.append('rect')                                     // NEW
+      .attr('width', 200)                          // NEW
+      .attr('height', 200)
+      .style('background-color', "blue")// NEW
+      .style('fill', 'lightblue')                                   // NEW
+      .style('stroke', 'blue');
+    // NEW
+    legend.append('text')                                     // NEW
+      .attr('x', 30)              // NEW
+      .attr('y', 50)              // NEW
+      .text("Testing");      
 
   })
 
