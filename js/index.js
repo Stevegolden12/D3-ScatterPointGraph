@@ -16,7 +16,6 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
     const Doping = data.map((arr) => arr.Doping)
     const Year = data.map((arr) => arr.Year)
 
-   
     var xScale = d3.scaleLinear()
       .domain([d3.min(Year), d3.max(Year)])
       .range([padding.bottom, width]);
@@ -30,7 +29,7 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
       .attr("width", 950)
       .attr("height", 650)
       .attr("padding", "40px 40px 40px 70px")
-      .style("background-color", "lightblue")
+      .style("background-color", "hsl(0, 0%, 95%)")
 
     var circle = svgContainer.selectAll("circle")
       .data(data)
@@ -42,10 +41,14 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
       .attr("cx", (d, i) => xScale(Year[i]))
       .attr("cy", (d, i) => yScale(Seconds[i]))
       .attr("r", 5)
+      .style("fill", (d) => {
+        if (d.Doping !== "") {
+          return "hsl(240, 50%, 30%)";
+        } else {
+          return "hsl(120, 50%, 30%)";
+        }
+      })
 
-    console.log(data[0].Name)
-
-    var index = 0
     circle
       .append("title")
       .text((d, i) => Name[i] + ": " + Nation[i] + "\nYear: " + Year[i] + ", Time: " + Time[i] + "\n\n" + Doping[i])
@@ -68,6 +71,57 @@ fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
       .attr("id", "y-axis")
       .attr("transform", "translate(" + padding.bottom +", 0)")
       .call(yAxis)
+
+   // add legend   
+
+   svgContainer.append("g")
+      .attr("id", "legend")
+      .attr("transform", "translate(400, 0)");
+
+    var legend = svgContainer.selectAll('.legend')            
+      .data(data)                                             
+      .enter()                                                
+      .append('g')                                            
+      .attr("transform", "translate(650, 350)");
+
+      /*// NEW
+      .attr('transform', function (d, i) {                     
+        var height = legendRectSize + legendSpacing;          
+        var offset = height * color.domain().length / 2;     
+        var horz = -2 * legendRectSize;                       
+        var vert = i * height - offset;                       
+        return 'translate(' + horz + ',' + vert + ')';        
+      });
+      */
+    
+    legend.append('rect')                                     
+      .attr('width', 250)                          
+      .attr('height', 55)
+      .style('fill', "hsl(180, 50%, 85%)")                               
+      .style('stroke', 'blue');
+
+    legend.append('text')                           
+      .attr('x', 20)              
+      .attr('y', 20)              
+      .text("No doping allegations");      
+
+    legend.append('circle')
+      .attr('cx', 225)
+      .attr('cy', 16)
+      .attr('r', 5)
+      .style('fill', "hsl(120, 50%, 30%)")
+
+
+    legend.append('text')
+      .attr('x', 20)
+      .attr('y', 40)
+      .text("Riders with doping allegations")
+
+    legend.append('circle')
+      .attr('cx', 225)
+      .attr('cy', 36)
+      .attr('r', 5)
+      .style('fill', "hsl(240, 50%, 30%)")
 
   })
 
